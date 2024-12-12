@@ -1,20 +1,57 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Button } from "react-native";
+import Home from "./app/screens/Home";
+import Login from "./app/screens/Login";
+import Register from "./app/screens/Register";
+import { AuthProvider, useAuth } from "./app/context/AuthContext";
+import TabNavigator from "./app/(tabs)/_layout";
+import PostDetails from "./app/post/[id]";
+import NotFoundScreen from "./app/screens/+not-found";
+import { ExpoRouter } from 'expo-router';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AuthProvider>
+      <Layout />
+    </AuthProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export const Layout = () => {
+  const { authState, onLogout } = useAuth();
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        {authState?.authenticated ? (
+          // Alsó navigáció, ha bejelentkezve
+          <Stack.Screen
+            name="Swing"
+            component={TabNavigator}
+            options={{
+              headerRight: () => <Button onPress={onLogout} title="Sign Out" />
+            }}
+          />
+        ) : (
+          <>
+            {/* Login és Register stack navigáció */}
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerTitleAlign: "center" }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{ headerTitleAlign: "center" }}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};

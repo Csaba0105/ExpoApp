@@ -1,0 +1,86 @@
+import React, { useEffect, useState } from 'react';
+import { FlatList, View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { API_URL, useAuth } from '../context/AuthContext';
+import { useRouter } from 'expo-router';
+
+export default function Home() {
+  const { authState } = useAuth(); // Hitelesítési állapot használata
+  const [data, setData] = useState([]); // Állapot az adatok tárolására
+  const [loading, setLoading] = useState(true); // Betöltési állapot
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      if (!authState?.token) {
+        Alert.alert('Error', 'You are not authenticated.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/post`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${authState.token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const result = await response.json();
+        setData(result); // Az API-tól kapott adat beállítása
+      } catch (error) {
+        Alert.alert('Error', 'Failed to fetch posts.');
+        console.error(error);
+      } finally {
+        setLoading(false); // Betöltési állapot frissítése
+      }
+    };
+
+    fetchPosts(); // Adatok betöltése az API-ból
+  }, [authState?.token]);
+
+  const renderItem = ({ item }: any) => {
+    return (
+      <View style={styles.item}>
+        <Text style={styles.text} onPress={() => router.push(`/post/${item.id}`)}>{item.title}</Text>
+        <Text style={styles.text}>{item.content}</Text>
+      </View>
+    );
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  return (
+    <FlatList
+      data={data} // Az API-tól kapott adatok
+      renderItem={renderItem} // Hogyan jelenjenek meg az elemek
+      keyExtractor={(item) => String(item.id)} // Egyedi kulcs az adatokból
+      initialNumToRender={10} // Kezdeti renderelendő elemek száma
+      maxToRenderPerBatch={10} // Egyszerre renderelt elemek száma
+      windowSize={5} // A látható területen kívüli elemek mérete
+      showsVerticalScrollIndicator={false}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    borderRadius: 8,
+  },
+  text: {
+    fontSize: 18,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
