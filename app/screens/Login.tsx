@@ -66,12 +66,12 @@ const Login = ({ navigation }: any) => {
           
           <AuthButton onPress={login} title='Sign in' />
           <SeparatorWithText text="Or" />
-          <View style={styles.row}>
-            <ThemedText type='subtitle'>Don’t have an account? </ThemedText>
+          <ThemedView style={styles.row}>
+            <ThemedText type='default'>Don’t have an account? </ThemedText>
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
               <ThemedText type='link'>Sign up</ThemedText>
             </TouchableOpacity>
-          </View>
+          </ThemedView>
         </ThemedView >
       </ParallaxScrollView>
       {/* Snackbar pozicionálása a szülő komponensben */}
@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 4,
   },
 })
