@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native'
+import { Image, StyleSheet, TextInput, View, TouchableOpacity } from 'react-native'
 import { useAuth } from '../context/AuthContext';
 import ParallaxScrollView from '../components/ParallaxScrollView';
 import { ThemedView } from '../components/ThemedView';
@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Snackbar } from 'react-native-paper';
 import AuthButton from '../components/AuthButton';
 import SeparatorWithText from '../components/SeparatorWithText';
+import { ThemedText } from '../components/ThemedText';
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
@@ -59,16 +60,16 @@ const Login = ({ navigation }: any) => {
       >
         <ThemedView style={styles.container} >
           <TextInput style={[styles.input, emailError ? styles.inputError : null]} placeholder="Email" onChangeText={(text: string) => { setEmail(text); validateEmail(text); }} value={email} />
-          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+          {emailError ? <ThemedText type='error'>{emailError}</ThemedText> : null}
           <TextInput style={[styles.input, passwordError ? styles.inputError : null]} placeholder="Password" secureTextEntry={true} onChangeText={(text: string) => { setPassword(text); validatePassword(text); }} value={password} />
-          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+          {passwordError ? <ThemedText type='error'>{passwordError}</ThemedText> : null}
           
           <AuthButton onPress={login} title='Sign in' />
           <SeparatorWithText text="Or" />
           <View style={styles.row}>
-            <Text>Don’t have an account? </Text>
+            <ThemedText type='subtitle'>Don’t have an account? </ThemedText>
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <Text style={styles.link}>Sign up</Text>
+              <ThemedText type='link'>Sign up</ThemedText>
             </TouchableOpacity>
           </View>
         </ThemedView >
@@ -120,12 +121,6 @@ const styles = StyleSheet.create({
   inputError: {
     borderColor: 'red',
   },
-  errorText: {
-    color: 'red',
-    fontSize: 12,
-    marginTop: -5,
-    marginBottom: 10,
-  },
   snackbar: {
     position: 'absolute',
     bottom: 0,
@@ -136,9 +131,5 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     marginTop: 4,
-  },
-  link: {
-    fontWeight: 'bold',
-    color: '#0000EE',
   },
 })
