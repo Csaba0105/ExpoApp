@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, Text, Button, TextInput, View } from 'react-native';
+import { Image, StyleSheet, TextInput, View } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { Snackbar } from 'react-native-paper';
 import ParallaxScrollView from '../components/ParallaxScrollView';
 import { ThemedView } from '../components/ThemedView';
+import AuthButton from '../components/AuthButton';
+import SeparatorWithText from '../components/SeparatorWithText';
+import { ThemedText } from '../components/ThemedText';
 
 const Register = ({ navigation }: any) => {
     const [firstName, setFirstName] = useState('');
@@ -69,7 +72,7 @@ const Register = ({ navigation }: any) => {
                         onChangeText={(text) => setFirstName(text)}
                         value={firstName}
                     />
-                    {errors.firstName ? <Text style={styles.errorText}>{errors.firstName}</Text> : null}
+                    {errors.firstName ? <ThemedText type='error'>{errors.firstName}</ThemedText> : null}
 
                     <TextInput
                         style={[styles.input, errors.lastName ? styles.inputError : null]}
@@ -77,7 +80,7 @@ const Register = ({ navigation }: any) => {
                         onChangeText={(text) => setLastName(text)}
                         value={lastName}
                     />
-                    {errors.lastName ? <Text style={styles.errorText}>{errors.lastName}</Text> : null}
+                    {errors.lastName ? <ThemedText type='error'>{errors.lastName}</ThemedText> : null}
 
                     <TextInput
                         style={[styles.input, errors.email ? styles.inputError : null]}
@@ -85,7 +88,7 @@ const Register = ({ navigation }: any) => {
                         onChangeText={(text) => setEmail(text)}
                         value={email}
                     />
-                    {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+                    {errors.email ? <ThemedText type='error'>{errors.email}</ThemedText> : null}
 
                     <TextInput
                         style={[styles.input, errors.password ? styles.inputError : null]}
@@ -94,7 +97,7 @@ const Register = ({ navigation }: any) => {
                         onChangeText={(text) => setPassword(text)}
                         value={password}
                     />
-                    {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
+                    {errors.password ? <ThemedText type='error'>{errors.password}</ThemedText> : null}
 
                     <TextInput
                         style={[styles.input, errors.rePassword ? styles.inputError : null]}
@@ -103,10 +106,11 @@ const Register = ({ navigation }: any) => {
                         onChangeText={(text) => setRePassword(text)}
                         value={rePassword}
                     />
-                    {errors.rePassword ? <Text style={styles.errorText}>{errors.rePassword}</Text> : null}
+                    {errors.rePassword ? <ThemedText type='error'>{errors.rePassword}</ThemedText> : null}
 
-                    <Button onPress={handleRegister} title="Create Account" />
-                    <Button onPress={() => navigation.navigate('Login')} title="Login" />
+                    <AuthButton onPress={handleRegister} title='Create Account' />
+                    <SeparatorWithText text="Or" />
+                    <AuthButton onPress={() => navigation.navigate('Login')} title="Sign in" />
                 </ThemedView>
             </ParallaxScrollView>
             <Snackbar
@@ -154,12 +158,6 @@ const styles = StyleSheet.create({
     },
     inputError: {
         borderColor: 'red',
-    },
-    errorText: {
-        color: 'red',
-        fontSize: 12,
-        marginTop: -5,
-        marginBottom: 10,
     },
     snackbar: {
         position: 'absolute',
