@@ -7,6 +7,7 @@ import { Snackbar } from 'react-native-paper';
 import AuthButton from '../components/AuthButton';
 import SeparatorWithText from '../components/SeparatorWithText';
 import { ThemedText } from '../components/ThemedText';
+import HelpButton from '../components/HelpButton';
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
@@ -92,6 +93,7 @@ const Login = ({ navigation }: any) => {
       >
         {snackbarMessage}
       </Snackbar>
+      <HelpButton onPress={() => navigation.navigate('Help')} />
     </View>
   )
 }

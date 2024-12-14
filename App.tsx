@@ -7,6 +7,7 @@ import Register from "./app/screens/Register";
 import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import TabNavigator from "./app/(tabs)/_layout";
 import ForgetPassword from "./app/screens/ForgetPassword";
+import HelpPage from "./app/screens/Help";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,7 @@ export const Layout = () => {
             <Stack.Screen name="Register" component={Register} options={{ headerTitleAlign: "center" }}
             />
             <Stack.Screen name="ForgetPassword" component={ForgetPassword} options={{ headerTitleAlign: "center", title: 'Forget Password'}} />
+            <Stack.Screen name="Help" component={HelpPage} />
           </>
         )}
       </Stack.Navigator>
