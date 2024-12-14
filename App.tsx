@@ -10,6 +10,7 @@ import TabNavigator from "./app/(tabs)/_layout";
 import PostDetails from "./app/post/[id]";
 import NotFoundScreen from "./app/screens/+not-found";
 import { ExpoRouter } from 'expo-router';
+import ForgetPassword from "./app/screens/ForgetPassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,16 +40,11 @@ export const Layout = () => {
         ) : (
           <>
             {/* Login és Register stack navigáció */}
-            <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{ headerTitleAlign: "center" }}
+            <Stack.Screen name="Login" component={Login} options={{ headerTitleAlign: "center" }}
             />
-            <Stack.Screen
-              name="Register"
-              component={Register}
-              options={{ headerTitleAlign: "center" }}
+            <Stack.Screen name="Register" component={Register} options={{ headerTitleAlign: "center" }}
             />
+            <Stack.Screen name="ForgetPassword" component={ForgetPassword} options={{ headerTitleAlign: "center" }} />
           </>
         )}
       </Stack.Navigator>

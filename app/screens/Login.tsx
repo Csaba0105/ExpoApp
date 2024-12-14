@@ -72,6 +72,11 @@ const Login = ({ navigation }: any) => {
               <ThemedText type='link'>Sign up</ThemedText>
             </TouchableOpacity>
           </ThemedView>
+          <ThemedView style={styles.row}>
+            <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
+              <ThemedText type="link">Forgot Password?</ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
         </ThemedView >
       </ParallaxScrollView>
       {/* Snackbar pozicionálása a szülő komponensben */}

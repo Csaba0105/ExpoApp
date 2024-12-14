@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { FlatList, View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { Image } from 'expo-image';
 import { API_URL, useAuth } from '../context/AuthContext';
 import { useRouter } from 'expo-router';
+import { ThemedText } from '../components/ThemedText';
+
+const blurhash =
+  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
 export default function Home() {
   const { authState } = useAuth(); // Hitelesítési állapot használata
@@ -40,11 +45,26 @@ export default function Home() {
   const renderItem = ({ item }: any) => {
     return (
       <View style={styles.item}>
-        <Text style={styles.text} onPress={() => router.push(`/post/${item.id}`)}>{item.title}</Text>
-        <Text style={styles.text}>{item.content}</Text>
+        {/* Ha vannak képek, megjelenítjük őket egy lapozható listában */}
+        {item.imageUrls.length > 0 && (
+          <FlatList
+            data={item.imageUrls} // Képek tömbje
+            horizontal // Vízszintes lapozás
+            showsHorizontalScrollIndicator={false} // Görgetősáv elrejtése
+            keyExtractor={(image, index) => `${item.id}-image-${index}`} // Egyedi kulcs minden képhez
+            renderItem={({ item: image }) => (
+              <Image source={{ uri: image }} placeholder={{ blurhash }} cachePolicy={'memory-disk'} contentFit='fill' /> // Kép megjelenítése
+            )} 
+          />
+        )}
+        {/* Poszt címe és tartalma */}
+        <ThemedText type="title" onPress={() => router.push(`/post/${item.id}`)}>
+          {item.title}
+        </ThemedText>
+        <ThemedText type="subtitle">{item.content}</ThemedText>
       </View>
     );
-  };
+  };  
 
   if (loading) {
     return (
@@ -74,9 +94,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
     borderRadius: 8,
-  },
-  text: {
-    fontSize: 18,
   },
   loadingContainer: {
     flex: 1,
