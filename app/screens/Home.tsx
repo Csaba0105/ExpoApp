@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { FlatList, View, StyleSheet, ActivityIndicator, Alert} from 'react-native';
 import { Image } from 'expo-image';
 import { API_URL, useAuth } from '../context/AuthContext';
 import { useRouter } from 'expo-router';
 import { ThemedText } from '../components/ThemedText';
+import LikeButton from '../components/LikeButton';
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
@@ -62,6 +63,11 @@ export default function Home() {
           {item.title}
         </ThemedText>
         <ThemedText type="subtitle">{item.content}</ThemedText>
+        {/* Post Tools */}
+        <View style={{ top: 15, alignItems: 'flex-start'}}>
+          <LikeButton></LikeButton>
+          <ThemedText type='default'>99 likes</ThemedText>
+        </View>
       </View>
     );
   };  
@@ -89,7 +95,7 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: '#f9c2ff',
+    backgroundColor: 'white',
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,

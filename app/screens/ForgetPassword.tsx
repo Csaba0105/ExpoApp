@@ -38,8 +38,7 @@ const ForgetPassword = ({ navigation }: any) => {
   };
 
   return (
-    <View style={styles.wrapper}>
-      <ThemedView>
+      <ThemedView style={styles.container}>
         <ThemedText type="title">Reset Password</ThemedText>
         <TextInput
           style={[styles.input, emailError ? styles.inputError : null]}
@@ -58,8 +57,7 @@ const ForgetPassword = ({ navigation }: any) => {
         >
           <ThemedText type="link">Back to Login</ThemedText>
         </TouchableOpacity>
-      </ThemedView>
-
+        
       {/* Snackbar */}
       <Snackbar
         visible={snackbarVisible}
@@ -73,17 +71,19 @@ const ForgetPassword = ({ navigation }: any) => {
       >
         {snackbarMessage}
       </Snackbar>
-    </View>
+      </ThemedView>
   );
 };
 
 export default ForgetPassword;
 
 const styles = StyleSheet.create({
-  wrapper: {
+  container: {
     flex: 1,
-    justifyContent: 'space-between',
-    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    gap: 8,
   },
   input: {
     borderWidth: 1,
