@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     right: 20,
     backgroundColor: '#A1CEDC',
     borderRadius: 40,
-    padding: 10,
+    padding: 5,
     elevation: 5,
   },
   icon: {
