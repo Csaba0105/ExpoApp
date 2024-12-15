@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { ThemedView } from '../components/ThemedView';
 import { ThemedText } from '../components/ThemedText';
 import { Snackbar } from 'react-native-paper';
@@ -38,26 +38,23 @@ const ForgetPassword = ({ navigation }: any) => {
   };
 
   return (
-      <ThemedView style={styles.container}>
-        <ThemedText type="title">Reset Password</ThemedText>
-        <TextInput
-          style={[styles.input, emailError ? styles.inputError : null]}
-          placeholder="Enter your email"
-          onChangeText={(text: string) => {
-            setEmail(text);
-            validateEmail(text);
-          }}
-          value={email}
-        />
-        {emailError ? <ThemedText type="error">{emailError}</ThemedText> : null}
-        <AuthButton onPress={handlePasswordReset} title="Send Reset Link" />
-        <TouchableOpacity
-          style={styles.backLink}
-          onPress={() => navigation.goBack()}
-        >
-          <ThemedText type="link">Back to Login</ThemedText>
-        </TouchableOpacity>
-        
+    <ThemedView style={styles.container}>
+      <ThemedText type="title">Reset Password</ThemedText>
+      <TextInput
+        style={[styles.input, emailError ? styles.inputError : null]}
+        placeholder="Enter your email"
+        onChangeText={(text: string) => {
+          setEmail(text);
+          validateEmail(text);
+        }}
+        value={email}
+      />
+      {emailError ? <ThemedText type="error">{emailError}</ThemedText> : null}
+      <AuthButton onPress={handlePasswordReset} title="Send Reset Link" />
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <ThemedText type="link">Back to Login</ThemedText>
+      </TouchableOpacity>
+
       {/* Snackbar */}
       <Snackbar
         visible={snackbarVisible}
@@ -71,7 +68,7 @@ const ForgetPassword = ({ navigation }: any) => {
       >
         {snackbarMessage}
       </Snackbar>
-      </ThemedView>
+    </ThemedView>
   );
 };
 
@@ -103,8 +100,5 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     margin: 16,
-  },
-  backLink: {
-    marginTop: 16,
   },
 });
