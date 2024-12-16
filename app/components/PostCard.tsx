@@ -7,31 +7,26 @@ import PostCardHeader from './PostCardHeader';
 import PostCardMedia from './PostCardMedia';
 import CommentSection from './PostCommentSection';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { io } from 'socket.io-client';
-
-const socket = io("http://localhost:8080/ws");
+import { API_URL, useAuth } from '../context/AuthContext';
 
 const PostCard = ({ item }: { item: any }) => {
     const router = useRouter();
-    const [likeCount, setLikeCount] = useState(item.initialLikes || 0);
+      const { authState } = useAuth();
+
     const [isCommentsVisible, setCommentsVisible] = useState(false);
 
-    useEffect(() => {
-        // Kapcsolódás a WebSocket csatornához
-        socket.on(`likes/${item.id}`, (newLikeCount) => {
-            setLikeCount(newLikeCount);
-        });
-
-        return () => {
-            socket.off(`likes/${item.id}`);
-        };
-    }, [item.id]);
-
     const handleLike = async () => {
+        console.log(item)
         try {
-            await fetch(`http://your-backend-url/api/posts/${item.id}/like?userId=1`, {
-                method: 'POST',
-            });
+            const response = await fetch(`${API_URL}/post/${item.id}/like?userId=${item.user.id}`, {
+                      method: 'POST',
+                      headers: {
+                        Authorization: `Bearer ${authState?.token}`,
+                        'Content-Type': 'application/json',
+                      },
+                    });
+                    const result = await response.json();
+            console.log("OK")
         } catch (error) {
             console.error("Error while liking the post:", error);
         }
@@ -62,7 +57,7 @@ const PostCard = ({ item }: { item: any }) => {
             {/* Tools Section */}
             <View style={styles.tools}>
                 <View style={styles.toolButtons}>
-                    <LikeButton />
+                        <LikeButton onPress={handleLike}/>
                     <TouchableOpacity
                         style={styles.commentButton}
                         onPress={() => setCommentsVisible(!isCommentsVisible)}

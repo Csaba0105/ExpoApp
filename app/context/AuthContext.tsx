@@ -21,7 +21,7 @@ interface AuthProps {
 
 const TOKEN_KEY = 'token';
 const PROFILE_KEY = 'profile'; // Kulcs a profil tárolásához
-export const API_URL = 'http://192.168.1.25:8080/api/v1';
+export const API_URL = 'http://192.168.1.24:8080/api/v1';
 const AuthContext = createContext<AuthProps>({});
 
 export const useAuth = () => {

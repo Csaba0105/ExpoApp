@@ -9,40 +9,36 @@ import Animated, {
 import { Pressable, View, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const LikeButton = () => {
+const LikeButton = ({ onPress }) => {
   const liked = useSharedValue(0);
 
-  const outlineStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: interpolate(liked.value, [0, 1], [1, 0], Extrapolate.CLAMP),
-        },
-      ],
-    };
-  });
+  const outlineStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: interpolate(liked.value, [0, 1], [1, 0], Extrapolate.CLAMP),
+      },
+    ],
+  }));
 
-  const fillStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: liked.value,
-        },
-      ],
-      opacity: liked.value,
-    };
-  });
+  const fillStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: liked.value,
+      },
+    ],
+    opacity: liked.value,
+  }));
 
   return (
-    <Pressable onPress={() => (liked.value = withSpring(liked.value ? 0 : 1))}>
+    <Pressable
+      onPress={() => {
+        liked.value = withSpring(liked.value ? 0 : 1);
+        if (onPress) onPress();
+      }}
+    >
       <Animated.View style={[StyleSheet.absoluteFillObject, outlineStyle]}>
-        <MaterialCommunityIcons
-          name={"heart-outline"}
-          size={32}
-          color={"black"}
-        />
+        <MaterialCommunityIcons name={"heart-outline"} size={32} color={"black"} />
       </Animated.View>
-
       <Animated.View style={fillStyle}>
         <MaterialCommunityIcons name={"heart"} size={32} color={"red"} />
       </Animated.View>
@@ -50,17 +46,4 @@ const LikeButton = () => {
   );
 };
 
-export default function AnimatedStyleUpdateExample(props: any) {
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-      }}
-    >
-      <LikeButton />
-    </View>
-  );
-}
+export default LikeButton;
