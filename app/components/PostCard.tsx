@@ -85,6 +85,9 @@ const PostCard = ({ item }: { item: any }) => {
                     >
                         <FontAwesome5 name="comment" size={26} color="black" />
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.bookmarkButton}>
+                        <FontAwesome5 name="bookmark" size={26} color="black" />
+                    </TouchableOpacity>
                 </View>
                 <ThemedText type="default">
                     {likeCount > 0 && (
@@ -92,11 +95,18 @@ const PostCard = ({ item }: { item: any }) => {
                             ? `${likeCount} like`
                             : `${likeCount} likes`
                     )}
-                    
+                    {likeCount > 0 && comments.length > 0 && (
+                        <>
+                        <View style={styles.spacer} />
+                        <View style={styles.dot} />
+                        <View style={styles.spacer} />
+                    </>
+                         
+                    )}
                     {comments.length > 0 && (
                         comments.length === 1
-                            ? ` - ${comments.length} comment`
-                            : ` - ${comments.length} comments`
+                            ? `${comments.length} comment`
+                            : `${comments.length} comments`
                     )}
                 </ThemedText>
             </View>
@@ -124,6 +134,19 @@ const styles = StyleSheet.create({
     },
     commentButton: {
         marginLeft: 15,
+    },
+    bookmarkButton: {
+        marginLeft: 15,
+    },
+    dot: {
+        width: 4,
+        height: 4,
+        borderRadius: 2,
+        backgroundColor: 'grey',
+        transform: [{ translateY: -2 }],
+    },
+    spacer: {
+        width: 4, // Szóköz szélessége
     },
 });
 

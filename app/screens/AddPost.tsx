@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
 import { NavigationProp } from '@react-navigation/native';
 import { API_URL, useAuth } from '../context/AuthContext';
+import * as ImagePicker from 'expo-image-picker';
 
 type AddPostScreenProps = {
   navigation: NavigationProp<any>;
@@ -11,6 +12,23 @@ const AddPostScreen: React.FC<AddPostScreenProps> = ({ navigation }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const { authState } = useAuth();
+  const [image, setImage] = useState<string | null>(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images', 'videos'],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const handleAddPost = async () => {
     if (!title || !content) {
@@ -64,6 +82,9 @@ const AddPostScreen: React.FC<AddPostScreenProps> = ({ navigation }) => {
         multiline
       />
 
+      <Button title="Pick an image from camera roll" onPress={pickImage} />
+      {image && <Image source={{ uri: image }} style={styles.image} />}
+
       <Button title="Add Post" onPress={handleAddPost} />
     </View>
   );
@@ -89,6 +110,10 @@ const styles = StyleSheet.create({
   },
   textArea: {
     height: 100,
+  },
+  image: {
+    width: 200,
+    height: 200,
   },
 });
 
