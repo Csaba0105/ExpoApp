@@ -11,22 +11,43 @@ import { API_URL, useAuth } from '../context/AuthContext';
 
 const PostCard = ({ item }: { item: any }) => {
     const router = useRouter();
-      const { authState } = useAuth();
-
+    const { authState } = useAuth();
+    const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
     const [isCommentsVisible, setCommentsVisible] = useState(false);
 
-    const handleLike = async () => {
-        console.log(item)
-        try {
-            const response = await fetch(`${API_URL}/post/${item.id}/like?userId=${item.user.id}`, {
-                      method: 'POST',
-                      headers: {
+    useEffect(() => {
+        const fetchLikeStatus = async () => {
+            try {
+                const response = await fetch(`${API_URL}/post/${item.id}/likes/status?userId=${item.user.id}`, {
+                    headers: {
                         Authorization: `Bearer ${authState?.token}`,
-                        'Content-Type': 'application/json',
-                      },
-                    });
-                    const result = await response.json();
-            console.log("OK")
+                    },
+                });
+                const data = await response.json();
+                setLiked(data.liked);
+                setLikeCount(data.likeCount);
+            } catch (error) {
+                console.error("Error fetching like status:", error);
+            }
+        };
+
+        fetchLikeStatus();
+    }, [item.id]);
+
+    const handleLike = async () => {
+        try {
+            await fetch(`${API_URL}/post/${item.id}/like?userId=${item.user.id}`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${authState?.token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            // Helyi állapot frissítése
+            setLiked(!liked);
+            setLikeCount((prevCount) => (liked ? prevCount - 1 : prevCount + 1));
         } catch (error) {
             console.error("Error while liking the post:", error);
         }
@@ -57,7 +78,7 @@ const PostCard = ({ item }: { item: any }) => {
             {/* Tools Section */}
             <View style={styles.tools}>
                 <View style={styles.toolButtons}>
-                        <LikeButton onPress={handleLike}/>
+                    <LikeButton liked={item.likedByCurrentUser} onPress={handleLike} />
                     <TouchableOpacity
                         style={styles.commentButton}
                         onPress={() => setCommentsVisible(!isCommentsVisible)}
@@ -66,7 +87,12 @@ const PostCard = ({ item }: { item: any }) => {
                     </TouchableOpacity>
                 </View>
                 <ThemedText type="default">
-                    99 likes
+                    {likeCount > 0 && (
+                        likeCount === 1
+                            ? `${likeCount} like`
+                            : `${likeCount} likes`
+                    )}
+                    
                     {comments.length > 0 && (
                         comments.length === 1
                             ? ` - ${comments.length} comment`
