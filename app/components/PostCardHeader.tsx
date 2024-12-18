@@ -3,12 +3,12 @@ import { ThemedView } from "./ThemedView";
 import { Colors } from '../constants/Colors';
 import { Image } from "expo-image";
 import { ThemedText } from "./ThemedText";
-import { Icon, IconButton } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import { useState } from "react";
 
 
 export default function PostCardHeader(props: any) {
-    const { profileImage, profileName, username } = props;
+    const { profileImage, profileName, profileUsername } = props;
     const theme = useColorScheme();
     const themeColors = Colors[theme || 'light'];
     const [modalVisible, setModalVisible] = useState(false);
@@ -24,7 +24,7 @@ export default function PostCardHeader(props: any) {
                     <ThemedText style={styles.profileName}>{profileName}</ThemedText>
                     <IconButton icon="check-circle" size={16} iconColor={themeColors.icon} style={{ marginLeft: 1 }} />
                 </View>
-                <ThemedText style={styles.username}>@{username}</ThemedText>
+                <ThemedText style={styles.username}>@{profileUsername}</ThemedText>
             </View>
 
             {/* Three-dot Icon */}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { ThemedText } from './ThemedText';
 import LikeButton from './LikeButton';
 import { useRouter } from 'expo-router';
@@ -14,7 +14,10 @@ const PostCard = ({ item }: { item: any }) => {
     const { authState } = useAuth();
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
+    const [commentCount, setCommentCount] = useState(0);
     const [isCommentsVisible, setCommentsVisible] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [loadingComments, setLoadingComments] = useState(false);
 
     useEffect(() => {
         const fetchLikeStatus = async () => {
@@ -31,7 +34,7 @@ const PostCard = ({ item }: { item: any }) => {
                 console.error("Error fetching like status:", error);
             }
         };
-
+        fetchCommentCount();
         fetchLikeStatus();
     }, [item.id]);
 
@@ -53,10 +56,43 @@ const PostCard = ({ item }: { item: any }) => {
         }
     };
 
-    const comments = [
-        { id: 1, user: 'User1', text: 'Nagyon jó poszt!' },
-        { id: 2, user: 'User2', text: 'Szép munka! 😊' },
-    ];
+    const fetchCommentCount = async () => {
+        try {
+            const response = await fetch(`${API_URL}/post/${item.id}/comments/count`, {
+                headers: {
+                    Authorization: `Bearer ${authState?.token}`,
+                },
+            });
+            const data = await response.json();
+            setCommentCount(data.commentCount);
+        } catch (error) {
+            console.error("Error fetching comment count:", error);
+        }
+    };
+
+    const fetchComments = async () => {
+        setLoadingComments(true);
+        try {
+            const response = await fetch(`${API_URL}/post/${item.id}/comments`, {
+                headers: {
+                    Authorization: `Bearer ${authState?.token}`,
+                },
+            });
+            const data = await response.json();
+            setComments(data);
+        } catch (error) {
+            console.error("Error fetching comments:", error);
+        } finally {
+            setLoadingComments(false);
+        }
+    };
+
+    const toggleCommentsVisibility = () => {
+        if (!isCommentsVisible) {
+            fetchComments();
+        }
+        setCommentsVisible(!isCommentsVisible);
+    };
 
     return (
         <View style={styles.item}>
@@ -64,6 +100,7 @@ const PostCard = ({ item }: { item: any }) => {
             <PostCardHeader
                 profileImage={item.user.imageUrl}
                 profileName={`${item.user.firstName} ${item.user.lastName}`}
+                profileUsername={item.user.userSortName}
             >
             </PostCardHeader>
             {/* Post Title and Content */}
@@ -81,7 +118,7 @@ const PostCard = ({ item }: { item: any }) => {
                     <LikeButton liked={item.likedByCurrentUser} onPress={handleLike} />
                     <TouchableOpacity
                         style={styles.commentButton}
-                        onPress={() => setCommentsVisible(!isCommentsVisible)}
+                        onPress={toggleCommentsVisibility}
                     >
                         <FontAwesome5 name="comment" size={26} color="black" />
                     </TouchableOpacity>
@@ -95,23 +132,31 @@ const PostCard = ({ item }: { item: any }) => {
                             ? `${likeCount} like`
                             : `${likeCount} likes`
                     )}
-                    {likeCount > 0 && comments.length > 0 && (
+                    {likeCount > 0 && commentCount > 0 && (
                         <>
-                        <View style={styles.spacer} />
-                        <View style={styles.dot} />
-                        <View style={styles.spacer} />
-                    </>
-                         
+                            <View style={styles.spacer} />
+                            <View style={styles.dot} />
+                            <View style={styles.spacer} />
+                        </>
+
                     )}
-                    {comments.length > 0 && (
-                        comments.length === 1
-                            ? `${comments.length} comment`
-                            : `${comments.length} comments`
+                    {commentCount > 0 && (
+                        commentCount === 1
+                            ? `${commentCount} comment`
+                            : `${commentCount} comments`
                     )}
                 </ThemedText>
             </View>
             {/* Comment Section */}
-            {isCommentsVisible && <CommentSection comments={comments} />}
+            {isCommentsVisible && (
+                <>
+                    {loadingComments ? (
+                        <ActivityIndicator size="small" color="#000" />
+                    ) : (
+                        <CommentSection comments={comments} />
+                    )}
+                </>
+            )}
         </View>
     );
 };
