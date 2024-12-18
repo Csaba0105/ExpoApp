@@ -153,7 +153,7 @@ const PostCard = ({ item }: { item: any }) => {
                     {loadingComments ? (
                         <ActivityIndicator size="small" color="#000" />
                     ) : (
-                        <CommentSection comments={comments} />
+                        <CommentSection comments={comments} postId={item.id} fetchCommentCount={fetchCommentCount} />
                     )}
                 </>
             )}

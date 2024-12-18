@@ -3,6 +3,8 @@ import { View, StyleSheet, Text, TextInput, Button, FlatList, Image, TouchableOp
 import Icon from 'react-native-vector-icons/FontAwesome'; // Szív ikonhoz
 import { ThemedText } from './ThemedText';
 import Feather from '@expo/vector-icons/Feather';
+import axios from 'axios';
+import { API_URL, useAuth } from '../context/AuthContext';
 
 interface Comment {
     id: number;
@@ -12,10 +14,14 @@ interface Comment {
 }
 
 interface CommentSectionProps {
-    comments: Comment[]; // Kommentek listája
+    comments: Comment[];
+    postId: number;
+    fetchCommentCount: () => void; // Új függvény hozzáadva
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({ comments }) => {
+const CommentSection: React.FC<CommentSectionProps> = ({ comments, postId, fetchCommentCount  }) => {
+    const { authState } = useAuth();
+    const userId = authState?.id;
     const [commentList, setCommentList] = useState(comments);
     const [newComment, setNewComment] = useState('');
 
@@ -30,14 +36,27 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments }) => {
     };
 
     // Új komment hozzáadása
-    const addComment = () => {
+    const addComment = async () => {
         if (newComment.trim()) {
-            const newId = commentList.length + 1;
-            setCommentList([
-                ...commentList,
-                { id: newId, userSortName: 'You', text: newComment, userImage: 'https://via.placeholder.com/40' },
-            ]);
-            setNewComment('');
+            try {
+                const response = await axios.post(`${API_URL}/post/${postId}/comments`, {
+                    userId,
+                    text: newComment,
+                });
+    
+                const addedComment: Comment = {
+                    id: response.data.id,
+                    userSortName: response.data.userSortName,
+                    text: response.data.text,
+                    userImage: response.data.userImage || 'https://via.placeholder.com/40', // Ha nincs kép, használj alapértelmezettet
+                };
+                setCommentList((prev) => [...prev, addedComment]);
+                setNewComment('');
+                await fetchCommentCount();
+            } catch (error) {
+                console.error('Error adding comment:', error);
+                alert("Failed to add comment. Please try again.");
+            }
         }
     };
 

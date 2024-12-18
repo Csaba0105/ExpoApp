@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 
 interface AuthProps {
     authState?: {
+        id?: number | null;
         token: string | null;
         authenticated: boolean | null;
         email?: string;
@@ -30,6 +31,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: any) => {
     const [authState, setAuthState] = useState<{
+        id?: number | null;
         token: string | null;
         authenticated: boolean | null;
         email?: string;
@@ -150,6 +152,7 @@ export const AuthProvider = ({ children }: any) => {
         try {
             const response = await axios.get(`${API_URL}/profile`);
             const profile = {
+                id: response.data.id,
                 email: response.data.email,
                 firstName: response.data.firstName,
                 lastName: response.data.lastName,
