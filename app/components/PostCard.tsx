@@ -12,6 +12,7 @@ import { API_URL, useAuth } from '../context/AuthContext';
 const PostCard = ({ item }: { item: any }) => {
     const router = useRouter();
     const { authState } = useAuth();
+    const userId = authState?.id;
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
     const [commentCount, setCommentCount] = useState(0);
@@ -22,7 +23,7 @@ const PostCard = ({ item }: { item: any }) => {
     useEffect(() => {
         const fetchLikeStatus = async () => {
             try {
-                const response = await fetch(`${API_URL}/post/${item.id}/likes/status?userId=${item.user.id}`, {
+                const response = await fetch(`${API_URL}/post/${item.id}/likes/status?userId=${userId}`, {
                     headers: {
                         Authorization: `Bearer ${authState?.token}`,
                     },
@@ -40,7 +41,7 @@ const PostCard = ({ item }: { item: any }) => {
 
     const handleLike = async () => {
         try {
-            await fetch(`${API_URL}/post/${item.id}/like?userId=${item.user.id}`, {
+            await fetch(`${API_URL}/post/${item.id}/like?userId=${userId}`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${authState?.token}`,

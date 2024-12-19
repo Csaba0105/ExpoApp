@@ -8,6 +8,7 @@ import { API_URL, useAuth } from '../context/AuthContext';
 
 interface Comment {
     id: number;
+    userId: number;
     userSortName: string;
     text: string;
     userImage: string;
@@ -19,7 +20,7 @@ interface CommentSectionProps {
     fetchCommentCount: () => void; // Új függvény hozzáadva
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({ comments, postId, fetchCommentCount  }) => {
+const CommentSection: React.FC<CommentSectionProps> = ({ comments, postId, fetchCommentCount }) => {
     const { authState } = useAuth();
     const userId = authState?.id;
     const [commentList, setCommentList] = useState(comments);
@@ -43,9 +44,10 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, postId, fetch
                     userId,
                     text: newComment,
                 });
-    
+
                 const addedComment: Comment = {
                     id: response.data.id,
+                    userId: response.data.userId,
                     userSortName: response.data.userSortName,
                     text: response.data.text,
                     userImage: response.data.userImage || 'https://via.placeholder.com/40', // Ha nincs kép, használj alapértelmezettet
@@ -57,6 +59,18 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, postId, fetch
                 console.error('Error adding comment:', error);
                 alert("Failed to add comment. Please try again.");
             }
+        }
+    };
+
+    const deleteComment = async (commentId: number) => {
+        try {
+            await axios.delete(`${API_URL}/post/${postId}/comments/${commentId}`, {
+            });
+            setCommentList((prev) => prev.filter((comment) => comment.id !== commentId));
+            await fetchCommentCount();
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+            alert('Failed to delete comment. Please try again.');
         }
     };
 
@@ -82,6 +96,12 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, postId, fetch
                                 style={styles.heartIcon}
                             />
                         </TouchableOpacity>
+                        {/* Törlés gomb, csak saját kommenteknél */}
+                        {item.userId === userId && ( // Feltételezve, hogy a comment tartalmazza a userId mezőt
+                            <TouchableOpacity onPress={() => deleteComment(item.id)}>
+                                <Feather name="trash-2" size={20} color="red" />
+                            </TouchableOpacity>
+                        )}
                     </View>
                 )}
                 ListEmptyComponent={<Text style={styles.noCommentsText}>No comments yet.</Text>}
