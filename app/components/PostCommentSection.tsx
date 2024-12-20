@@ -50,7 +50,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, postId, fetch
                     userId: response.data.userId,
                     userSortName: response.data.userSortName,
                     text: response.data.text,
-                    userImage: response.data.userImage || 'https://via.placeholder.com/40', // Ha nincs kép, használj alapértelmezettet
+                    userImage: response.data.userImage || 'https://via.placeholder.com/40',
                 };
                 setCommentList((prev) => [...prev, addedComment]);
                 setNewComment('');
