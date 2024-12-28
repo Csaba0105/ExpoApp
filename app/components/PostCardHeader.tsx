@@ -8,7 +8,7 @@ import { useState } from "react";
 
 
 export default function PostCardHeader(props: any) {
-    const { profileImage, profileName, profileUsername } = props;
+    const { usedId, profileImage, profileName, profileUsername } = props;
     const theme = useColorScheme();
     const themeColors = Colors[theme || 'light'];
     const [modalVisible, setModalVisible] = useState(false);
@@ -21,7 +21,7 @@ export default function PostCardHeader(props: any) {
             {/* Profile Info */}
             <View style={styles.textContainer}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <ThemedText style={styles.profileName}>{profileName}</ThemedText>
+                        <ThemedText style={styles.profileName}>{profileName}</ThemedText>
                     <IconButton icon="check-circle" size={16} iconColor={themeColors.icon} style={{ marginLeft: 1 }} />
                 </View>
                 <ThemedText style={styles.username}>@{profileUsername}</ThemedText>

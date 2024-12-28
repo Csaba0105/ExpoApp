@@ -31,7 +31,8 @@ const PostDetails = () => {
       const result = await response.json();
       setPost(result);
     } catch (error) {
-      Alert.alert('Error', error.message || 'Failed to load post details.');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to load post details.';
+      Alert.alert('Error', errorMessage);
       console.error(error);
     } finally {
       setLoading(false);

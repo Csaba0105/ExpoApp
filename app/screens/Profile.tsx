@@ -1,12 +1,20 @@
 import React from "react";
-import { View, Text, StyleSheet, Button, Image } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 import { useAuth } from "../context/AuthContext";
+import { Image } from "expo-image";
+import ProfileTabView from "../components/ProfileTabView";
 
 const Profile = () => {
   const { authState, onLogout } = useAuth(); // Lekérdezzük a bejelentkezett felhasználót
 
   return (
     <View style={styles.container}>
+      <Image
+        source={authState?.image}
+        style={styles.avatar} // Avatar kép
+        contentFit="cover"
+        transition={1000}
+      />
       <Text style={styles.title}>Profil</Text>
       <Text style={styles.label}>Név: {authState?.firstName} {authState?.lastName}</Text>
       <Text style={styles.label}>Email: {authState?.email}</Text>
@@ -20,6 +28,7 @@ const Profile = () => {
 
       {/* Kijelentkezés gomb */}
       <Button title="Kijelentkezés" onPress={onLogout} color="tomato" />
+      <ProfileTabView />
     </View>
   );
 };
@@ -56,6 +65,12 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 8,
   },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginRight: 10,
+},
 });
 
 export default Profile;

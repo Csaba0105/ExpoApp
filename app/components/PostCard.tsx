@@ -99,6 +99,7 @@ const PostCard = ({ item }: { item: any }) => {
         <View style={styles.item}>
             {/* Post Header */}
             <PostCardHeader
+                userId={item.user.id}
                 profileImage={item.user.imageUrl}
                 profileName={`${item.user.firstName} ${item.user.lastName}`}
                 profileUsername={item.user.userSortName}

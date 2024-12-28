@@ -8,6 +8,7 @@ import { AuthProvider, useAuth } from "./app/context/AuthContext";
 import TabNavigator from "./app/(tabs)/_layout";
 import ForgetPassword from "./app/screens/ForgetPassword";
 import HelpPage from "./app/screens/Help";
+import UserDetailsScreen from "./app/screens/user/[id]";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,16 +27,22 @@ export const Layout = () => {
     <NavigationContainer>
       <Stack.Navigator>
         {authState?.authenticated ? (
-          // Alsó navigáció, ha bejelentkezve
-          <Stack.Screen
-            name="Swing"
-            component={TabNavigator}
-            options={{
-              headerRight: () => <Button onPress={onLogout} title="Sign Out" />
-            }}
-          />
-        ) : (
-          <>
+            <>
+              <Stack.Screen
+              name="Swing"
+              component={TabNavigator}
+              options={{
+                headerRight: () => <Button onPress={onLogout} title="Sign Out" />
+              }}
+              />
+              <Stack.Screen
+              name="UserDetails"
+              component={UserDetailsScreen}
+              options={{ headerTitleAlign: "center", title: 'User Details' }}
+              />
+            </>
+          ) : (
+            <>
             {/* Login és Register stack navigáció */}
             <Stack.Screen name="Login" component={Login} options={{ headerTitleAlign: "center"}}
             />
@@ -43,7 +50,7 @@ export const Layout = () => {
             />
             <Stack.Screen name="ForgetPassword" component={ForgetPassword} options={{ headerTitleAlign: "center", title: 'Forget Password'}} />
             <Stack.Screen name="Help" component={HelpPage} />
-          </>
+            </>
         )}
       </Stack.Navigator>
     </NavigationContainer>

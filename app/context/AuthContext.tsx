@@ -156,7 +156,7 @@ export const AuthProvider = ({ children }: any) => {
                 email: response.data.email,
                 firstName: response.data.firstName,
                 lastName: response.data.lastName,
-                image: response.data.image,
+                image: response.data.imageUrl,
             };
             setAuthState(prevState => ({
                 ...prevState,
